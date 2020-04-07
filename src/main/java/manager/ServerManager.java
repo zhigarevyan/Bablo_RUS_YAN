@@ -2,13 +2,15 @@ package manager;
 
 import entity.Player;
 import entity.Result;
+import lombok.extern.log4j.Log4j;
 import util.ConnectorDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
+@Log4j
 public class ServerManager {
+
     private Connection connection;
 
     private final static String SQL_INSERT_PLAYER="insert into bablo.players(name) values (?)";
@@ -30,10 +32,8 @@ public class ServerManager {
             ps = connection.prepareStatement(SQL_INSERT_PLAYER);
             ps.setString(1,player.getName());
             ps.execute();
-            System.out.println("sdfsdf");
         } catch (SQLException e) {
             e.printStackTrace();
-
         }
     }
 
@@ -49,6 +49,8 @@ public class ServerManager {
             ps.setString(6,result.getSet5());
             ps.setString(7,result.getSet6());
             ps.setString(8,result.getSet7());
+            ps.execute();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -63,8 +65,8 @@ public class ServerManager {
             ServerManager serverManager = new ServerManager();
             //serverManager.insertPlayer(player);
             //serverManager.insertPlayer(player1);
-            serverManager.insertResult(result);
-            serverManager.insertResult(result1);
+            //serverManager.insertResult(result);
+            //serverManager.insertResult(result1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
