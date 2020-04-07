@@ -1,6 +1,6 @@
 package entity;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
 public class Result {
