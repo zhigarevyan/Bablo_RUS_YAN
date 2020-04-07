@@ -13,7 +13,7 @@ public class ServerManager {
 
     private final static String SQL_INSERT_PLAYER="insert into bablo.players(name) values (?)";
     private final static String SQL_INSERT_RESULT="insert into bablo.result (score, set1,set2,set3,set4,set5,set6,set7) values (?,?,?,?,?,?,?,?)";
-    private final static String SQL_INSERT_MATCH="";
+    //private final static String SQL_INSERT_MATCH="";
 
 
     public ServerManager() throws SQLException {
@@ -30,8 +30,10 @@ public class ServerManager {
             ps = connection.prepareStatement(SQL_INSERT_PLAYER);
             ps.setString(1,player.getName());
             ps.execute();
+            System.out.println("sdfsdf");
         } catch (SQLException e) {
             e.printStackTrace();
+
         }
     }
 
@@ -46,16 +48,26 @@ public class ServerManager {
             ps.setString(5,result.getSet4());
             ps.setString(6,result.getSet5());
             ps.setString(7,result.getSet6());
-            ps.setString(7,result.getSet7());
+            ps.setString(8,result.getSet7());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        Player player = new Player("Yan");
-        Player player1 = new Player("Rusl");
-        Result result = new Result("4:3","10:12","10:12","10:12","12:10","12:10","12:10","12:10");
-        Result result1 = new Result("4:3","10:12","10:12","10:12","12:10","12:10","12:10","12:10");
+        try {
+            Player player = new Player("Yan");
+            Player player1 = new Player("Rusl");
+            Result result = new Result("4:3", "10:12", "10:12", "10:12", "12:10", "12:10", "12:10", "12:10");
+            Result result1 = new Result("4:3", "10:12", "10:12", "10:12", "12:10", "12:10", "12:10", "12:10");
+            ServerManager serverManager = new ServerManager();
+            //serverManager.insertPlayer(player);
+            //serverManager.insertPlayer(player1);
+            serverManager.insertResult(result);
+            serverManager.insertResult(result1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
