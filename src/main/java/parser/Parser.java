@@ -12,9 +12,11 @@ import java.io.IOException;
 @Data
 public class Parser {
     private static File file;
+    private static Document doc;
 
-    public Parser(File file) {
+    public Parser(File file, Document doc) {
         this.file = file;
+        this.doc = doc;
     }
 
     void searchScore(){
@@ -30,39 +32,33 @@ public class Parser {
             e.printStackTrace();
         }
     }
-    Element searchLine(){
-        try {
-            Elements form = doc.getElementsByClass("text-success text-right");
+    void searchLine(){
+            Elements form = doc.getElementsByClass("list-group-item");
             for(Element elem : form){
-                String s = elem.text();
-                System.out.println(s);
+                searchPlayers(elem);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    void searchPlayers(){
-        Document doc = null;
-        try {
-            doc = Jsoup.parse(file,"UTF-8");
-            Elements namesOfPlayers = doc.getElementsByClass("text-success text-right");
-            Elements form = doc.getElementsByClass("small");
-            for(Element elem : form){
+    void searchPlayers(Element line){
+
+        Elements players = line.getElementsByClass("small");
+            for(Element elem : players){
                 String s = elem.text();
                 System.out.println(s);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
+
 
     public static void main(String[] args) {
-        File f = new File("D:\\UNIVER\\java\\Bablo_RUS_YAN\\src\\main\\resources\\Результаты матчей.html");
-        Parser parser = new Parser(f);
-        //parser.searchScore();
-        parser.searchPlayers();
-
+        try {
+            File f = new File("D:\\UNIVER\\java\\Bablo_RUS_YAN\\src\\main\\resources\\Результаты матчей.html");
+            Document doc = Jsoup.parse(f, "UTF-8");
+            Parser parser = new Parser(f, doc);
+            //parser.searchScore();
+            //parser.searchPlayers();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
