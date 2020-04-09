@@ -38,8 +38,10 @@ public class Parser {
         for (Element form : bigForm) {
             Elements resultSet = form.getElementsByClass("text-success text-right");
             for (Element score : resultSet) {
-                String s = scoreToString(score.text()).toString();
+                Result s = scoreToResult(score.text());
                 System.out.println(s);
+                serverManager.insertResult(s);
+
             }
         }
     }
@@ -105,7 +107,7 @@ public class Parser {
     }
 
 
-    public Result scoreToString(String score){
+    public Result scoreToResult(String score){
         String clearScore="";
         String[] listOfScores;
         Result results = new Result();

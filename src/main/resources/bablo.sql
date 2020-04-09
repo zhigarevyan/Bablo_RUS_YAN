@@ -71,9 +71,14 @@ CREATE TABLE IF NOT EXISTS `bablo`.`matches` (
   CONSTRAINT `result`
     FOREIGN KEY (`result`)
     REFERENCES `bablo`.`result` (`idresult`))
+
+
+    ALTER TABLE `bablo`.`result`
+CHANGE COLUMN `set4` `set4` VARCHAR(5) NULL ;
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
