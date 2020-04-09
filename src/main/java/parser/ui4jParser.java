@@ -1,6 +1,7 @@
 package parser;
 
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
+import entity.Player;
 import entity.Result;
 import lombok.SneakyThrows;
 import org.jsoup.nodes.Element;
@@ -18,7 +19,30 @@ import java.util.List;
 
 public class ui4jParser {
 
-    public static Result scoreToResult(String score){
+    public static Player[] playersToDBForm(String players){
+        String clearPlayers="";
+        String[] listOfPlayers;
+        Player[] playersArr = {new Player(), new Player()};
+//        for(char ch : players.toCharArray()){
+//            if(ch != ',')
+//                clearPlayers+=ch;
+//        }
+        listOfPlayers = players.split(" - ");
+
+        listOfPlayers[0].trim();
+        listOfPlayers[1].trim();
+        int deleteAfterIndex = listOfPlayers[0].lastIndexOf(" ");
+        listOfPlayers[0] = listOfPlayers[0].substring(0,deleteAfterIndex);
+        deleteAfterIndex = listOfPlayers[1].lastIndexOf(" ");
+        listOfPlayers[1] = listOfPlayers[1].substring(0,deleteAfterIndex);
+
+        System.out.println(listOfPlayers[0]+listOfPlayers[1]);
+        playersArr[0].setName(listOfPlayers[0]);
+        playersArr[1].setName(listOfPlayers[1]);
+        return playersArr;
+    }
+
+    public static Result scoreToDBForm(String score){
         String clearScore="";
         String[] listOfScores;
         Result results = new Result();
@@ -40,7 +64,9 @@ public class ui4jParser {
     public static void main(String[] args) {
 
         MyThread thread = new MyThread();
-        thread.run();
+        //playersToDBForm("Станислав Ошкин (Рос) - Михаил Леонов (Рос)");  GOTOVO
+
+        //thread.run();
     }
 
     static class MyThread extends Thread {
@@ -107,7 +133,7 @@ public class ui4jParser {
             System.out.println(results);
 
             for (String string : results) {
-                Result s = scoreToResult(string);
+                Result s = scoreToDBForm(string);
                 System.out.println(s);
             }
             //Thread.sleep(5000);  // Let the user actually see something!
