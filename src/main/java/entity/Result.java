@@ -3,6 +3,7 @@ package entity;
 import lombok.*;
 
 @Data
+@NoArgsConstructor
 public class Result {
     private int id;
     private String score;
@@ -14,6 +15,7 @@ public class Result {
     private String set6;
     private String set7;
 
+
     public Result(String score, String set1, String set2, String set3, String set4, String set5, String set6, String set7) {
         this.score = score;
         this.set1 = set1;
@@ -23,5 +25,17 @@ public class Result {
         this.set5 = set5;
         this.set6 = set6;
         this.set7 = set7;
+    }
+
+    public void setSet(int setNum, String result) {
+        switch (setNum){
+            case 1: this.set1 = result; break;
+            case 2: this.set2 = result; break;
+            case 3: this.set3 = result; break;
+            case 4: this.set4 = result; break;
+            case 5: this.set5 = result; break;
+            case 6: this.set6 = result; break;
+            case 7: this.set7 = result; break;
+        }
     }
 }

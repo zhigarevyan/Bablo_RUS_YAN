@@ -7,6 +7,7 @@ import util.ConnectorDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 @Log4j
 public class ServerManager {
@@ -15,6 +16,11 @@ public class ServerManager {
 
     private final static String SQL_INSERT_PLAYER="insert into bablo.players(name) values (?)";
     private final static String SQL_INSERT_RESULT="insert into bablo.result (score, set1,set2,set3,set4,set5,set6,set7) values (?,?,?,?,?,?,?,?)";
+    private final static String SQL_SELECT_PLAYER_NAME="select name from bablo.players where name = (?) ";
+    private final static String SQL_SELECT_RESULT_FOR_MATCH = "select idresult from bablo.result order by idresult desc limit 1";
+    //private final static String s;
+
+
     //private final static String SQL_INSERT_MATCH="";
 
 
@@ -27,12 +33,19 @@ public class ServerManager {
     }
 
     public void insertPlayer(Player player){
+        PreparedStatement psToSelect = null;
         PreparedStatement ps = null;
         try{
-            ps = connection.prepareStatement(SQL_INSERT_PLAYER);
-            ps.setString(1,player.getName());
-            ps.execute();
-        } catch (SQLException e) {
+            psToSelect = connection.prepareStatement(SQL_SELECT_PLAYER_NAME);
+            psToSelect.setString(1,player.getName());
+            ResultSet rs = psToSelect.executeQuery();
+            while (rs.next()){
+                return;
+            }
+                ps = connection.prepareStatement(SQL_INSERT_PLAYER);
+                ps.setString(1, player.getName());
+                ps.execute();
+            } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -56,12 +69,16 @@ public class ServerManager {
         }
     }
 
+    public void insertMatch(){
+
+    }
+
     public static void main(String[] args) {
         try {
-            Player player = new Player("Yan");
-            Player player1 = new Player("Rusl");
-            Result result = new Result("4:3", "10:12", "10:12", "10:12", "12:10", "12:10", "12:10", "12:10");
-            Result result1 = new Result("4:3", "10:12", "10:12", "10:12", "12:10", "12:10", "12:10", "12:10");
+            //Player player = new Player("Yan1");
+            //Player player1 = new Player("Rusl");
+            //Result result = new Result("4:3", "10:12", "10:12", "10:12", "12:10", "12:10", "12:10", "12:10");
+            //Result result1 = new Result("4:3", "10:12", "10:12", "10:12", "12:10", "12:10", "12:10", "12:10");
             ServerManager serverManager = new ServerManager();
             //serverManager.insertPlayer(player);
             //serverManager.insertPlayer(player1);
