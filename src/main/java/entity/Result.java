@@ -5,7 +5,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 public class Result {
-    private int id;
+    private int id; // айдишка нам тут походу не нужна.
     private String score;
     private String set1;
     private String set2;

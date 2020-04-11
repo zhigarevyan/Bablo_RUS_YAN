@@ -17,16 +17,18 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ui4jParser {
+public class SeleniumParser {
+
+    static ArrayList<String> datas = new ArrayList<String>();
+    static ArrayList<String> names = new ArrayList<String>();
+    static ArrayList<String> results = new ArrayList<String>();
 
     public static Player[] playersToDBForm(String players){
+
         String clearPlayers="";
         String[] listOfPlayers;
         Player[] playersArr = {new Player(), new Player()};
-//        for(char ch : players.toCharArray()){
-//            if(ch != ',')
-//                clearPlayers+=ch;
-//        }
+
         listOfPlayers = players.split(" - ");
 
         listOfPlayers[0].trim();
@@ -63,63 +65,32 @@ public class ui4jParser {
 
     public static void main(String[] args) {
 
-        MyThread thread = new MyThread();
-        //playersToDBForm("Станислав Ошкин (Рос) - Михаил Леонов (Рос)");  GOTOVO
-
-        //thread.run();
+        ParsingThread thread = new ParsingThread();
+        //Player[] players = playersToDBForm("Станислав Ошкин (Рос) - Михаил Леонов (Рос)");
+        thread.run();
     }
 
-    static class MyThread extends Thread {
+    static class ParsingThread extends Thread {
 
         @SneakyThrows
         @Override
         public void run() {
 
-            // Optional. If not specified, WebDriver searches the PATH for chromedriver.
             System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 
             WebDriver driver = new ChromeDriver();
             driver.get("https://1xbet.com/results/");
-            this.sleep(5000);  // Let the user actually see something!
             WebDriverWait wait1 = new WebDriverWait(driver, 10000);
-            WebElement element1 = wait1.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"searchGames\"]")));
-            //WebElement searchBox = driver.findElement(By.className("c-search__input"));
-
-            element1.sendKeys("Мастерс");
-            //element1.submit();
-
-            //wait1.wait(500);
-
-
-
-//            List<WebElement> dates= driver.findElements(By.className("c-games__opponents"));
-//
-//            int count = 0;
-//            for (WebElement elements : dates) {
-//                System.out.println(
-//                        //elements.getText());
-//                        elements.getAttribute("innerText"));
-//
-//                count++;
-//            }
-//            System.out.println("Строк: "+count);
-
-            //c-games__row_light
-
-
-            ArrayList<String> datas = new ArrayList<String>();
-            ArrayList<String> names = new ArrayList<String>();
-            ArrayList<String> results = new ArrayList<String>();
-
-
+            wait1.until(ExpectedConditions.elementToBeClickable(By.className("c-games__row")));
+            WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
+            this.sleep(1000);
+            searchBox.sendKeys("Мастерс");
             List<WebElement> dates= driver.findElements(By.className("c-games__row_light"));
+
             int count = 0;
             for (WebElement elements : dates) {
                 String getInput = elements.getAttribute("innerText");
-
-                System.out.println(getInput);
-
-                //String[] input = getInput.split("↵");
+                //System.out.println(getInput); //SOUT info from WEBElement - Lines.
                 String[] input = getInput.split("\\r?\\n");
 
                 datas.add(input[0]);
@@ -127,20 +98,12 @@ public class ui4jParser {
                 results.add(input[2]);
                 count++;
             }
-            System.out.println("Строк: "+count);
-            System.out.println(datas);
-            System.out.println(names);
-            System.out.println(results);
 
-            for (String string : results) {
-                Result s = scoreToDBForm(string);
-                System.out.println(s);
-            }
-            //Thread.sleep(5000);  // Let the user actually see something!
-            //driver.quit();
+            System.out.println("Строк отпарсено: "+count);
+//            System.out.println(datas);
+//            System.out.println(names);
+//            System.out.println(results);
 
-            //WebElement element1 = wait1.until(ExpectedConditions.elementToBeClickable(By.xpath("xpath_of_element_to_be_clicked")));
-            //element1.click();
         }
     }
 }
