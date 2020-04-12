@@ -123,6 +123,7 @@ public class SeleniumParser {
     public static void main(String[] args) {
         linesQuantity = getInfoFromWebsite(); //returns number of lines;
         insertIntoDB();
+        insertIntoDB();
 
 
     }
