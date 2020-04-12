@@ -19,6 +19,7 @@ public class ServerManager {
     private final static String SQL_INSERT_PLAYER="insert into bablo.players(name) values (?)";
     private final static String SQL_INSERT_RESULT="insert into bablo.result (score, set1,set2,set3,set4,set5,set6,set7) values (?,?,?,?,?,?,?,?)";
     private final static String SQL_SELECT_PLAYER_NAME="select name from bablo.players where name = (?) ";
+    private final static String SQL_SELECT_MATCH="select * from bablo.matches where matches.player1 = (?) and matches.player2 = (?) and result = (?) and matches.date = (?)";
     private final static String SQL_SELECT_RESULT_FOR_MATCH = "select idresult from bablo.result order by idresult desc limit 1";
     private final static String SQL_SELECT_PLAYER_FOR_MATCH = "select players.idplayers from bablo.players where name = (?)";
     private final static String SQL_INSERT_MATCH = "insert into bablo.matches(player1,player2,result,date) values (?,?,?,?)";
@@ -76,7 +77,9 @@ public class ServerManager {
         PreparedStatement psForPlayer2 = null;
         PreparedStatement psForResult = null;
         PreparedStatement psForInsertMatch = null;
+        PreparedStatement psForCheck = null;
         try{
+            psForCheck =connection.prepareStatement(SQL_SELECT_MATCH);
             psForPlayer1 = connection.prepareStatement(SQL_SELECT_PLAYER_FOR_MATCH);
             psForPlayer2 = connection.prepareStatement(SQL_SELECT_PLAYER_FOR_MATCH);
             psForResult = connection.prepareStatement(SQL_SELECT_RESULT_FOR_MATCH);
@@ -89,8 +92,14 @@ public class ServerManager {
             rsForPlayer1.next();
             rsForPlayer2.next();
             rsForResult.next();
-            int a = rsForPlayer1.getInt(1);
-            System.out.println(a);
+            psForCheck.setString(1,String.valueOf(rsForPlayer1.getInt(1)));
+            psForCheck.setString(2,String.valueOf(rsForPlayer2.getInt(1)));
+            psForCheck.setString(3,String.valueOf(rsForResult.getInt(1)));
+            psForCheck.setString(4,String.valueOf(date.toString()));
+            ResultSet resultToCheck = psForCheck.executeQuery();
+            while(resultToCheck.next()){
+                return;
+            }
             System.out.println(rsForPlayer1.getInt(1) + " - " + rsForPlayer2.getInt(1) + " - " + rsForResult.getInt(1));
             psForInsertMatch.setString(1,String.valueOf(rsForPlayer1.getInt(1)));
             psForInsertMatch.setString(2,String.valueOf(rsForPlayer2.getInt(1)));

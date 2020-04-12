@@ -56,8 +56,8 @@ public class Parser {
                     Elements toMedia = item.getElementsByClass("media");
                     for(Element element : toMedia) {
                     searchDate(element);
-                    searchPlayers(element);
-                    searchScore(element);
+                    //searchPlayers(element);
+                    //searchScore(element);
                     }
                 }
             }
