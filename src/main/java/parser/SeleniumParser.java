@@ -19,6 +19,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 public class SeleniumParser {
 
     static ArrayList<String> datas = new ArrayList<String>();
@@ -74,7 +76,11 @@ public class SeleniumParser {
         WebDriver driver = new ChromeDriver();
         driver.get("https://1xbet.com/results/");
         WebDriverWait wait1 = new WebDriverWait(driver, 10000);
-        wait1.until(ExpectedConditions.elementToBeClickable(By.className("c-games__row")));
+        //WebElement nastolkaButton = wait1.until(ExpectedConditions.elementToBeClickable(By.xpath("*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
+        WebElement nastolkaButton = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
+        nastolkaButton.click();
+        System.out.println(nastolkaButton.getText());
+        //wait1.until(ExpectedConditions.elementToBeClickable(By.className("c-games__row")));
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
         searchBox.sendKeys("Мастерс");
         List<WebElement> dates= driver.findElements(By.className("c-games__row_light"));
