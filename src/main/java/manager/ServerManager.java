@@ -19,6 +19,7 @@ public class ServerManager {
     private final static String SQL_INSERT_PLAYER="insert into bablo.players(name) values (?)";
     private final static String SQL_INSERT_RESULT="insert into bablo.result (score, set1,set2,set3,set4,set5,set6,set7) values (?,?,?,?,?,?,?,?)";
     private final static String SQL_SELECT_PLAYER_NAME="select name from bablo.players where name = (?) ";
+    private final static String SQL_SELECT_RESULT="select * from bablo.result where result.score = (?) and result.set1 = (?) and result.set2 = (?) and result.set3 = (?) and result.set4 = (?) and result.set5 = (?) and result.set6 = (?) and result.set7 = (?)";
     private final static String SQL_SELECT_MATCH="select * from bablo.matches where matches.player1 = (?) and matches.player2 = (?) and result = (?) and matches.date = (?)";
     private final static String SQL_SELECT_RESULT_FOR_MATCH = "select idresult from bablo.result order by idresult desc limit 1";
     private final static String SQL_SELECT_PLAYER_FOR_MATCH = "select players.idplayers from bablo.players where name = (?)";
@@ -55,8 +56,22 @@ public class ServerManager {
 
     public void insertResult(Result result){
         PreparedStatement ps = null;
+        PreparedStatement psForCheck = null;
         try{
             ps = connection.prepareStatement(SQL_INSERT_RESULT);
+            psForCheck = connection.prepareStatement(SQL_SELECT_RESULT);
+            psForCheck.setString(1,result.getScore());
+            psForCheck.setString(2,result.getSet1());
+            psForCheck.setString(3,result.getSet2());
+            psForCheck.setString(4,result.getSet3());
+            psForCheck.setString(5,result.getSet4());
+            psForCheck.setString(6,result.getSet5());
+            psForCheck.setString(7,result.getSet6());
+            psForCheck.setString(8,result.getSet7());
+            ResultSet rsForCheck = psForCheck.executeQuery();
+            while (rsForCheck.next()){
+             return;
+            }
             ps.setString(1,result.getScore());
             ps.setString(2,result.getSet1());
             ps.setString(3,result.getSet2());
@@ -118,14 +133,14 @@ public class ServerManager {
             Player player = new Player("Моляка Дмитрий");
             Player player1 = new Player("Косых Олег");
             Date date = Date.valueOf("2000-01-01");
-            Result result = new Result("4:3", "10:12", "10:12", "10:12", "12:10", "12:10", "12:10", "12:10");
+            Result result = new Result("4:2", "10:12", "10:12", "10:12", "12:10", "12:10", "12:10", "12:10");
             //Result result1 = new Result("4:3", "10:12", "10:12", "10:12", "12:10", "12:10", "12:10", "12:10");
             ServerManager serverManager = new ServerManager();
             //serverManager.insertPlayer(player);
             //serverManager.insertPlayer(player1);
-            //serverManager.insertResult(result);
+            serverManager.insertResult(result);
             //serverManager.insertResult(result1);
-            serverManager.insertMatch(player1,player,result,date);
+            //serverManager.insertMatch(player1,player,result,date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
