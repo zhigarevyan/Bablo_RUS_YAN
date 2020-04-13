@@ -85,6 +85,9 @@ public class SeleniumParser {
             //System.out.println(getInput); //SOUT info from WEBElement - Lines.
             String[] input = getInput.split("\\r?\\n");
 
+            if(input[1].contains("/")) {
+                continue;
+            }
             datas.add(input[0]);
             names.add(input[1]);
             results.add(input[2]);
@@ -122,6 +125,7 @@ public class SeleniumParser {
 
     public static void main(String[] args) {
         linesQuantity = getInfoFromWebsite(); //returns number of lines;
+        insertIntoDB();
         insertIntoDB();
 
 
