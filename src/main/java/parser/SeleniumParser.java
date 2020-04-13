@@ -135,7 +135,7 @@ public class SeleniumParser {
 
 
     }
-
+//yan ne pitukh
     public static void getDataForMonth() {
 
         WebDriver driver = new ChromeDriver();
