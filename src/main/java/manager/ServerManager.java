@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
 
 @Log4j
 public class ServerManager {
@@ -90,7 +89,7 @@ public class ServerManager {
         }
     }
 
-    public void insertMatch(Player player1, Player player2, Result result, Date date){
+    public void insertMatch(Player player1, Player player2, Result result, String date){
         PreparedStatement psForPlayer1 = null;
         PreparedStatement psForPlayer2 = null;
         PreparedStatement psForResult = null;
@@ -121,7 +120,7 @@ public class ServerManager {
             psForCheck.setString(1,String.valueOf(rsForPlayer1.getInt(1)));
             psForCheck.setString(2,String.valueOf(rsForPlayer2.getInt(1)));
             psForCheck.setString(3,String.valueOf(rsForResult.getInt(1)));
-            psForCheck.setString(4,String.valueOf(date.toString()));
+            psForCheck.setString(4,date);
             ResultSet resultToCheck = psForCheck.executeQuery();
             if(resultToCheck.next()) {
                 return;
@@ -131,7 +130,7 @@ public class ServerManager {
                 psForInsertMatch.setString(1, String.valueOf(rsForPlayer1.getInt(1)));
                 psForInsertMatch.setString(2, String.valueOf(rsForPlayer2.getInt(1)));
                 psForInsertMatch.setString(3, String.valueOf(rsForResult.getInt(1)));
-                psForInsertMatch.setString(4, String.valueOf(date.toString()));
+                psForInsertMatch.setString(4, date);
                 psForInsertMatch.execute();
             }
 
@@ -146,7 +145,6 @@ public class ServerManager {
         try {
             Player player = new Player("Моляка Дмитрий");
             Player player1 = new Player("Косых Олег");
-            Date date = Date.valueOf("2000-01-01");
             Result result = new Result("4:2", "10:12", "10:12", "10:12", "12:10", "12:10", "12:10", "12:10");
             //Result result1 = new Result("4:3", "10:12", "10:12", "10:12", "12:10", "12:10", "12:10", "12:10");
             ServerManager serverManager = new ServerManager();

@@ -85,7 +85,6 @@ public class SeleniumParser {
         searchBox.sendKeys("Мастерс");
         List<WebElement> dates= driver.findElements(By.className("c-games__row_light"));
 
-        int linesQuantity = 0;
         for (WebElement elements : dates) {
             String getInput = elements.getAttribute("innerText");
             //System.out.println(getInput); //SOUT info from WEBElement - Lines.
@@ -106,12 +105,12 @@ public class SeleniumParser {
     @SneakyThrows
     public static void insertIntoDB() {
         serverManager = new ServerManager();
-        Date date;
+        String date;
         Player[] twoPlayers;
         Result result;
         int index;
         for (index = 0; index < linesQuantity; index++) {
-            date = datasToDB("11.04 07:00");
+            date = datasToDB(datas.get(index));
             twoPlayers = playersToDBForm(names.get(index));
             result = scoreToDBForm(results.get(index));
             serverManager.insertPlayer(twoPlayers[0]);
@@ -122,18 +121,63 @@ public class SeleniumParser {
         System.out.println("Вставлено " + index + " строк.");
     }
 
-    public static Date datasToDB(String string) {
-        int deleteAfterIndex = string.lastIndexOf(" ");
-        String result = string.substring(0,deleteAfterIndex); //Потом переделать, бо время нужно!
-        String[] tempString= result.split("\\.");
-        return Date.valueOf("2020-"+tempString[1]+'-'+tempString[0]);
+    public static String datasToDB(String string) {
+        String[] result = string.split(" ");
+        String[] tempString= result[0].split("\\.");
+        return "2020-"+tempString[1]+'-'+tempString[0] + " " + result[1];
     }
 
     public static void main(String[] args) {
-        linesQuantity = getInfoFromWebsite(); //returns number of lines;
-        insertIntoDB();
-        insertIntoDB();
+        //linesQuantity = getInfoFromWebsite(); //returns number of lines;
+        //insertIntoDB();
+        //insertIntoDB();
+        getDataForMonth();
 
+
+    }
+
+    public static void getDataForMonth() {
+
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://1xbet.com/results/");
+        WebDriverWait wait1 = new WebDriverWait(driver, 10000);
+        WebElement nastolkaButton = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
+        nastolkaButton.click();
+        WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
+        searchBox.sendKeys("Мастерс");
+
+        int daySelected;
+        Actions builder = new Actions(driver);
+        while(true) {
+            //List<WebElement> lines = driver.findElements(By.className("c-games__row_light"));
+            //addToLists(lines);
+            WebElement calendar = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[1]"));
+            Actions mouseOverCalendarAndClick = builder
+                    .moveToElement(calendar)
+                    .click();
+            mouseOverCalendarAndClick.perform();
+            WebElement selectedDay = driver.findElement(By.xpath("//span[starts-with(@class, \"cell day selected\")]"));
+            daySelected = Integer.valueOf(selectedDay.getText());
+            System.out.println(daySelected);
+            break;
+        }
+        // wait1.until(ExpectedConditions.elementToBeClickable(By.className("c-games__row")));
+
+    }
+
+    public static void addToLists(List<WebElement> list) {
+
+        for (WebElement elements : list) {
+            String getInput = elements.getAttribute("innerText");
+            String[] input = getInput.split("\\r?\\n");
+            if(input[1].contains("/")) {
+                continue;
+            }
+            datas.add(input[0]);
+            names.add(input[1]);
+            results.add(input[2]);
+            linesQuantity++;
+        }
 
     }
 
