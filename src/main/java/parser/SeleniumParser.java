@@ -113,9 +113,6 @@ public class SeleniumParser {
             date = datasToDB(datas.get(index));
             twoPlayers = playersToDBForm(names.get(index));
             result = scoreToDBForm(results.get(index));
-            serverManager.insertPlayer(twoPlayers[0]);
-            serverManager.insertPlayer(twoPlayers[1]);
-            serverManager.insertResult(result);
             serverManager.insertMatch(twoPlayers[0],twoPlayers[1],result,date);
         }
         System.out.println("Вставлено " + index + " строк.");
@@ -127,14 +124,7 @@ public class SeleniumParser {
         return "2020-"+tempString[1]+'-'+tempString[0] + " " + result[1];
     }
 
-    public static void main(String[] args) {
-        //linesQuantity = getInfoFromWebsite(); //returns number of lines;
-        //insertIntoDB();
-        //insertIntoDB();
-        getDataForMonth();
 
-
-    }
 //yan ne pitukh
     public static void getDataForMonth() {
 
@@ -179,6 +169,14 @@ public class SeleniumParser {
             linesQuantity++;
         }
 
+    }
+
+
+    public static void main(String[] args) {
+        linesQuantity = getInfoFromWebsite(); //returns number of lines;
+        //insertIntoDB();
+        insertIntoDB();
+        //getDataForMonth();
     }
 
 }
