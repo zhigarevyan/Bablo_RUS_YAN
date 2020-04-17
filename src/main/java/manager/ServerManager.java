@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 @Log4j
 public class ServerManager {
@@ -23,8 +24,9 @@ public class ServerManager {
     private final static String SQL_SELECT_RESULT_FOR_MATCH="select idresult from bablo.result where result.score = (?) and result.set1 = (?) and result.set2 = (?) and result.set3 = (?) and result.set4 = (?) and result.set5 = (?) and result.set6 = (?) and result.set7 = (?)";
     private final static String SQL_SELECT_PLAYER_FOR_MATCH = "select players.idplayers from bablo.players where name = (?)";
     private final static String SQL_INSERT_MATCH = "insert into bablo.matches(player1,player2,result,date) values (?,?,?,?)";
-    private final static String SQL_SEARCH_PLAYERS_MATCH="select matches.date, p1.name, p2.name, r.score,r.set1,r.set2,r.set3,r.set4,r.set5,r.set6,r.set7 from matches, players p1, players p2, result r where matches.player1 = p1.idplayers and matches.player2 = p2.idplayers and matches.result=r.idresult and (p1.name=(?) or p2.name = (?))";
-    private final static String SQL_SEARCH_2PLAYERS_MATCH="select matches.date, p1.name, p2.name, r.score,r.set1,r.set2,r.set3,r.set4,r.set5,r.set6,r.set7 from matches, players p1, players p2, result r where matches.player1 = p1.idplayers and matches.player2 = p2.idplayers and matches.result=r.idresult and ((p1.name=(?) and p2.name = (?)) or (p1.name=(?) and p2.name = (?)))";
+    private final static String SQL_SEARCH_PLAYERS_MATCH="select matches.date, p1.name, p2.name, r.score,r.set1,r.set2,r.set3,r.set4,r.set5,r.set6,r.set7 from matches, players p1, players p2, result r where matches.player1 = p1.idplayers and matches.player2 = p2.idplayers and matches.result=r.idresult and (p1.name=(?) or p2.name = (?)) order by matches.date desc limit 20";
+    private final static String SQL_SEARCH_2PLAYERS_MATCH="select matches.date, p1.name, p2.name, r.score,r.set1,r.set2,r.set3,r.set4,r.set5,r.set6,r.set7 from matches, players p1, players p2, result r where matches.player1 = p1.idplayers and matches.player2 = p2.idplayers and matches.result=r.idresult and ((p1.name=(?) and p2.name = (?)) or (p1.name=(?) and p2.name = (?))) order by matches.date desc limit 10";
+    private final static String SQL_SEARCH_ALL_MATCHES="select matches.date, p1.name, p2.name, r.score,r.set1,r.set2,r.set3,r.set4,r.set5,r.set6,r.set7 from matches, players p1, players p2, result r where matches.player1 = p1.idplayers and matches.player2 = p2.idplayers and matches.result=r.idresult order by matches.date desc";
 
 
 
@@ -170,6 +172,44 @@ public class ServerManager {
         }
     }
 
+    public void searchPlayersMatchWithForaAndTotals(String name){
+        PreparedStatement ps = null;
+        String[] result;
+        double countMatches=0, countWin=0;
+
+        String[] setScores = new String[7];
+        String[] resultArray = new String[11];
+
+        try{
+            ps = connection.prepareStatement(SQL_SEARCH_PLAYERS_MATCH);
+            ps.setString(1,name);
+            ps.setString(2,name);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                for (int index = 0; index < 11; index++) {
+                    resultArray[index] = rs.getString(index+1);
+                }
+
+                setScores = Arrays.copyOfRange(resultArray, 4, 11);
+                double[] forasAndTotals = getForaAndTotals(setScores);
+                countMatches++;
+
+                System.out.printf("%s | %s - %s | %s | %s %s %s %s %s %s %s | Fora1: %.2f Total1: %.2f | Fora2: %.0f Total2: %.0f\n", resultArray[0],resultArray[1],resultArray[2],resultArray[3],resultArray[4],resultArray[5],resultArray[6],resultArray[7],resultArray[8],resultArray[9],resultArray[10],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3]);
+
+                result = rs.getString(4).split(":");
+                if(Double.valueOf(result[0])>Double.valueOf(result[1]) && rs.getString(2).equals(name)){
+                    countWin++;
+                }
+                if(Double.valueOf(result[0])<Double.valueOf(result[1]) && rs.getString(3).equals(name)){
+                    countWin++;
+                }
+            }
+            System.out.println("matches - "+countMatches + " wins - "+ countWin + "winrate - " + countWin/countMatches*100);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void search2PlayersMatch(String name1, String name2){
         PreparedStatement ps = null;
         String[] result;
@@ -203,6 +243,105 @@ public class ServerManager {
         }
     }
 
+    public void search2PlayersMatchWithForaAndTotals(String name1, String name2){
+
+        PreparedStatement ps = null;
+        String[] result;
+        double winsOfPlayer1=0,winsOfPlayer2=0;
+
+        //double avgFora1= 0.0, avgFora2 = 0.0;
+        //int avgTotal1 = 0, avgTotal2 = 0;
+        //int counterLines = 0;
+
+        try{
+            ps = connection.prepareStatement(SQL_SEARCH_2PLAYERS_MATCH);
+            ps.setString(1,name1);
+            ps.setString(2,name2);
+            ps.setString(3,name2);
+            ps.setString(4,name1);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+
+                String[] setScores = new String[7];
+
+                String[] resultArray = new String[11];
+                //counterLines++;
+                result = rs.getString(4).split(":");
+
+                //int counterSets = 0;
+
+                for (int index = 0; index < 11; index++) {
+                    resultArray[index] = rs.getString(index+1);
+                }
+
+                setScores = Arrays.copyOfRange(resultArray, 4, 11);
+                double[] forasAndTotals = getForaAndTotals(setScores);
+
+                if(Double.valueOf(result[0])>Double.valueOf(result[1])){
+                    if(rs.getString(2).equals(name1))
+                        winsOfPlayer1++;
+                    else
+                        winsOfPlayer2++;
+                }
+                if(Double.valueOf(result[0])<Double.valueOf(result[1])){
+                    if(rs.getString(2).equals(name1))
+                        winsOfPlayer2++;
+                    else
+                        winsOfPlayer1++;
+                }
+
+                System.out.printf("%s | %s - %s | %s | %s %s %s %s %s %s %s | Fora1: %.2f Total1: %.2f | Fora2: %.0f Total2: %.0f\n", resultArray[0],resultArray[1],resultArray[2],resultArray[3],resultArray[4],resultArray[5],resultArray[6],resultArray[7],resultArray[8],resultArray[9],resultArray[10],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3]);
+
+                //System.out.println(rs.getString(1) + " " + rs.getString(2) + " - " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) + " " + rs.getString(6) + " " + rs.getString(7) + " " + rs.getString(8) + " " + rs.getString(9) + " " + rs.getString(10) + " ");
+            }
+            System.out.println("wins of "+name1+" - "+winsOfPlayer1 +" / wins of "+name2+" - "+winsOfPlayer2);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public double[] getForaAndTotals(String[] setScores) {
+        int Total1 = 0, Total2 = 0;
+        double Fora1 = 0.0, Fora2 = 0.0;
+        double[] result = new double[4];
+        for (int index = 0; index < 7; index++) {
+            String[] splitedSet = new String[2];
+            String set = setScores[index];
+
+            if(set.equals("null")) {
+                continue;
+            }
+
+            splitedSet = set.split(":");
+            Total1 += Integer.parseInt(splitedSet[0]);
+            Total2 += Integer.parseInt(splitedSet[1]);
+    }
+
+        Fora1 = Total1-Total2;
+        Fora2 = Total2-Total1;
+
+        result[0] = Fora1;
+        result[1] = Fora2;
+        result[2] = Total1;
+        result[3] = Total2;
+
+        return result;
+    }
+
+    public void searchAllMatches(){
+        PreparedStatement ps = null;
+        try{
+            ps = connection.prepareStatement(SQL_SEARCH_ALL_MATCHES);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                System.out.println(rs.getString(1) + " " + rs.getString(2) + " - " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) + " " + rs.getString(6) + " " + rs.getString(7) + " " + rs.getString(8) + " " + rs.getString(9) + " " + rs.getString(10) + " ");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void main(String[] args) {
         try {
             //Player player = new Player("Моляка Дмитрий");
@@ -215,8 +354,15 @@ public class ServerManager {
             //serverManager.insertResult(result);
             //serverManager.insertResult(result1);
             //serverManager.insertMatch(player1,player,result,date);
-            serverManager.searchPlayersMatch("Андрей Попов");
-            //serverManager.search2PlayersMatch("Андрей Попов","Алексей Попов");
+            String p1 = "Максим Боков";
+            String p2 = "Богдан Тихонов";
+            System.out.printf("\n\n -------------%s statistics------------- \n\n",p1);
+            serverManager.searchPlayersMatchWithForaAndTotals(p1);
+            System.out.printf("\n\n -------------%s statistics------------- \n\n",p2);
+            serverManager.searchPlayersMatchWithForaAndTotals(p2);
+            System.out.printf("\n\n -------------%s - %s------------- \n\n", p1,p2);
+            serverManager.search2PlayersMatchWithForaAndTotals(p1,p2);
+            //serverManager.searchAllMatches();
         } catch (SQLException e) {
             e.printStackTrace();
         }
