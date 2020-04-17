@@ -298,9 +298,9 @@ public class ServerManager {
                 }
 
                 if(rs.getString(2).equals(name1))
-                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f\n", resultArray[0],resultArray[1],resultArray[2],result[0],result[1],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3]);
+                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[1],resultArray[2],result[0],result[1],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3], forasAndTotals[2]+forasAndTotals[3]);
                 else{
-                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f\n", resultArray[0],resultArray[2],resultArray[1],result[1],result[0],forasAndTotals[1],forasAndTotals[3],forasAndTotals[0],forasAndTotals[2]);
+                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[2],resultArray[1],result[1],result[0],forasAndTotals[1],forasAndTotals[3],forasAndTotals[0],forasAndTotals[2], forasAndTotals[2]+forasAndTotals[3]);
                 }
 
                 //System.out.printf("%s | %s - %s | %s | %s %s %s %s %s %s %s | Fora1: %.2f Total1: %.2f | Fora2: %.0f Total2: %.0f\n", resultArray[0],resultArray[1],resultArray[2],resultArray[3],resultArray[4],resultArray[5],resultArray[6],resultArray[7],resultArray[8],resultArray[9],resultArray[10],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3]);
