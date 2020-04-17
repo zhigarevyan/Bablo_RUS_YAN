@@ -87,7 +87,7 @@ public class SeleniumParser {
         System.out.println(nastolkaButton.getText());
         //wait1.until(ExpectedConditions.elementToBeClickable(By.className("c-games__row")));
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
-        searchBox.sendKeys("Мастерс");
+        searchBox.sendKeys("BoomCup");
         while(true) {
             try {
                 sleep(15000);
@@ -138,7 +138,7 @@ public class SeleniumParser {
         WebElement nastolkaButton = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
         nastolkaButton.click();
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
-        searchBox.sendKeys("Мастерс");
+        searchBox.sendKeys("BoomCup");
         wait1.until(ExpectedConditions.visibilityOfElementLocated(By.className("c-games__row_light")));
 
         WebElement calendar = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[1]"));
@@ -233,10 +233,10 @@ public class SeleniumParser {
     }
 
     public static void main(String[] args) {
-        linesQuantity = getInfoFromWebsite(); //returns number of lines;
+        //linesQuantity = getInfoFromWebsite(); //returns number of lines;
         //insertIntoDB();
         //insertIntoDB();
-        //getDataForMonth();
+        getDataForMonth();
 
     }
 
