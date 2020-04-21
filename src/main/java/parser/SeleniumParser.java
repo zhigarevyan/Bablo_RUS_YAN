@@ -87,7 +87,7 @@ public class SeleniumParser {
         System.out.println(nastolkaButton.getText());
         //wait1.until(ExpectedConditions.elementToBeClickable(By.className("c-games__row")));
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
-        searchBox.sendKeys("Мастерс");
+        searchBox.sendKeys("BoomCup");
         while(true) {
             try {
                 sleep(15000);
@@ -138,14 +138,19 @@ public class SeleniumParser {
         WebElement nastolkaButton = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
         nastolkaButton.click();
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
-        searchBox.sendKeys("Мастерс");
+        searchBox.sendKeys("Boom-Cup");
         wait1.until(ExpectedConditions.visibilityOfElementLocated(By.className("c-games__row_light")));
 
+        try {
+            sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         WebElement calendar = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[1]"));
         WebElement prevMonth = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/header/span[1]"));
         WebElement showResults = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[2]/div[2]/div/div/div[5]/div"));
         WebElement temp = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[1]"));
-        int monthCounter = 6;
+        int monthCounter = 3;
         boolean firstMonth = true;
         while(monthCounter >= 0) {
             List<WebElement> daysToGet = driver.findElements(By.xpath("//*[@id='router_app']/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/div/*[.!='' and not(starts-with(@class,'cell day-header')) and not(starts-with(@class,'cell day disabled'))]"));
@@ -235,7 +240,6 @@ public class SeleniumParser {
     public static void main(String[] args) {
         linesQuantity = getInfoFromWebsite(); //returns number of lines;
         insertIntoDB();
-        //insertIntoDB();
         //getDataForMonth();
 
     }
