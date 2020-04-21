@@ -200,14 +200,14 @@ public class ServerManager {
 
 
                 if (rs.getString(2).equals(name)) {
-                    //System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[1], resultArray[2], result[0], result[1], forasAndTotals[0], forasAndTotals[2], forasAndTotals[1], forasAndTotals[3], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
+                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[1], resultArray[2], result[0], result[1], forasAndTotals[0], forasAndTotals[2], forasAndTotals[1], forasAndTotals[3], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
                     //не закочено!
-                    System.out.printf("%s | %s - %s | %s : %s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[1],resultArray[2],result[0],result[1],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3], forasAndTotals[2]+forasAndTotals[3]);
+                    //System.out.printf("%s | %s - %s | %s : %s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[1],resultArray[2],result[0],result[1],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3], forasAndTotals[2]+forasAndTotals[3]);
                 } else {
                     setScores = reverseSets(setScores);
-                    System.out.printf("%s | %s - %s | %s : %s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[2],resultArray[1],result[1],result[0],forasAndTotals[1],forasAndTotals[3],forasAndTotals[0],forasAndTotals[2], forasAndTotals[2]+forasAndTotals[3]);
+                    //System.out.printf("%s | %s - %s | %s : %s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[2],resultArray[1],result[1],result[0],forasAndTotals[1],forasAndTotals[3],forasAndTotals[0],forasAndTotals[2], forasAndTotals[2]+forasAndTotals[3]);
                     //не закочено!
-                    //System.out.printf("%s | %s - %s | %s : %s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s\n", resultArray[0], resultArray[2], resultArray[1], result[1], result[0], forasAndTotals[1], forasAndTotals[3], forasAndTotals[0], forasAndTotals[2], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
+                    System.out.printf("%s | %s - %s | %s : %s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s\n", resultArray[0], resultArray[2], resultArray[1], result[1], result[0], forasAndTotals[1], forasAndTotals[3], forasAndTotals[0], forasAndTotals[2], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
                 }
 
         }
@@ -304,14 +304,14 @@ public class ServerManager {
 
                 if (rs.getString(2).equals(name1))
                     //not finished
-                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[1],resultArray[2],result[0],result[1],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3], forasAndTotals[2]+forasAndTotals[3]);
-                    //System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[1], resultArray[2], result[0], result[1], forasAndTotals[0], forasAndTotals[2], forasAndTotals[1], forasAndTotals[3], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
+                    //System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[1],resultArray[2],result[0],result[1],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3], forasAndTotals[2]+forasAndTotals[3]);
+                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[1], resultArray[2], result[0], result[1], forasAndTotals[0], forasAndTotals[2], forasAndTotals[1], forasAndTotals[3], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
 
                 else {
                     setScores = reverseSets(setScores);
                     //not finished
-                    //System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[1], resultArray[2], result[0], result[1], forasAndTotals[0], forasAndTotals[2], forasAndTotals[1], forasAndTotals[3], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
-                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[2],resultArray[1],result[1],result[0],forasAndTotals[1],forasAndTotals[3],forasAndTotals[0],forasAndTotals[2], forasAndTotals[2]+forasAndTotals[3]);
+                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[2], resultArray[1], result[1], result[0], forasAndTotals[0], forasAndTotals[2], forasAndTotals[2], forasAndTotals[1], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
+                    //System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[2],resultArray[1],result[1],result[0],forasAndTotals[1],forasAndTotals[3],forasAndTotals[0],forasAndTotals[2], forasAndTotals[2]+forasAndTotals[3]);
                 }
 
                 //System.out.printf("%s | %s - %s | %s | %s %s %s %s %s %s %s | Fora1: %.2f Total1: %.2f | Fora2: %.0f Total2: %.0f\n", resultArray[0],resultArray[1],resultArray[2],resultArray[3],resultArray[4],resultArray[5],resultArray[6],resultArray[7],resultArray[8],resultArray[9],resultArray[10],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3]);
@@ -326,7 +326,7 @@ public class ServerManager {
 
     public String[] reverseSets(String[] setScores) {
         String[] result = new String[setScores.length];
-        for (int index = 0; index > setScores.length; index++) {
+        for (int index = 0; index < setScores.length; index++) {
             String set = setScores[index];
             if (set.equals("null")) {
                 result[index] = "null";
