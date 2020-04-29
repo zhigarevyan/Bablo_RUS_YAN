@@ -88,21 +88,33 @@ public class SeleniumParser {
         //wait1.until(ExpectedConditions.elementToBeClickable(By.className("c-games__row")));
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
         searchBox.sendKeys("BoomCup");
-        while(true) {
-            try {
-                sleep(15000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
+//        while(true) {
+//            try {
+//                sleep(15000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
             List<WebElement> dates = driver.findElements(By.className("c-games__row_light"));
             addToLists(dates);
             insertIntoDB();
-            datas = new ArrayList<String>();
-            names = new ArrayList<String>();
-            results = new ArrayList<String>();
-            linesQuantity = 0;
-        }
-
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b");
+            searchBox.sendKeys("Мастерс");
+        dates = driver.findElements(By.className("c-games__row_light"));
+        datas = new ArrayList<String>();
+        names = new ArrayList<String>();
+        results = new ArrayList<String>();
+        linesQuantity = 0;
+            addToLists(dates);
+            insertIntoDB();
+        //}
+        return 1;
     }
 
     @SneakyThrows
