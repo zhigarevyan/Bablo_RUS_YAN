@@ -313,13 +313,13 @@ public class ServerManager {
                     //System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[1],resultArray[2],result[0],result[1],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3], forasAndTotals[2]+forasAndTotals[3]);
                 {
 
-                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | winrate1: %.0f  winrate2: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[1], resultArray[2], result[0], result[1], forasAndTotals[0], forasAndTotals[2], forasAndTotals[1], forasAndTotals[3], forasAndTotals[2] + forasAndTotals[3], win1, win2 , setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
+                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | WinR1: %.0f : WinR2: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[1], resultArray[2], result[0], result[1], forasAndTotals[0], forasAndTotals[2], forasAndTotals[1], forasAndTotals[3], forasAndTotals[2] + forasAndTotals[3], win1, win2 , setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
                 }
 
                 else {
                     setScores = reverseSets(setScores);
                     //not finished
-                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | winrate1: %.0f  winrate2: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[2], resultArray[1], result[1], result[0], forasAndTotals[1], forasAndTotals[3], forasAndTotals[0], forasAndTotals[2], forasAndTotals[2] + forasAndTotals[3],win2 ,win1, setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
+                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | WinR1: %.0f : WinR2: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[2], resultArray[1], result[1], result[0], forasAndTotals[1], forasAndTotals[3], forasAndTotals[0], forasAndTotals[2], forasAndTotals[2] + forasAndTotals[3],win2 ,win1, setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
                     //System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[2],resultArray[1],result[1],result[0],forasAndTotals[1],forasAndTotals[3],forasAndTotals[0],forasAndTotals[2], forasAndTotals[2]+forasAndTotals[3]);
                 }
 
@@ -401,8 +401,8 @@ public class ServerManager {
             //serverManager.insertResult(result);
             //serverManager.insertResult(result1);
             //serverManager.insertMatch(player1,player,result,date);
-            String p1 = "Николай Гольтяпин";
-                String p2 = "Евгений Шмаков";
+            String p1 = "Андрей Гришин";
+                String p2 = "Вячеслав Горбунов";
 
             serverManager.searchAllMatches();
             System.out.println("\n");
