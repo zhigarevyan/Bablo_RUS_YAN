@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -194,6 +195,10 @@ public class ServerManager {
                     resultArray[index] = rs.getString(index + 1);
                 }
 
+                String date = resultArray[0].substring(0,10);
+                String matchDate = getWeekDayFromDate(date);
+
+
                 setScores = Arrays.copyOfRange(resultArray, 4, 11);
                 double[] forasAndTotals = getForaAndTotals(setScores);
                 countMatches++;
@@ -209,19 +214,19 @@ public class ServerManager {
 
 
                 if (rs.getString(2).equals(name)) {
-                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[1], resultArray[2], result[0], result[1], forasAndTotals[0], forasAndTotals[2], forasAndTotals[1], forasAndTotals[3], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
+                    System.out.printf("%s %s| %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], matchDate,resultArray[1], resultArray[2], result[0], result[1], forasAndTotals[0], forasAndTotals[2], forasAndTotals[1], forasAndTotals[3], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
                     //не закочено!
                     //System.out.printf("%s | %s - %s | %s : %s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[1],resultArray[2],result[0],result[1],forasAndTotals[0],forasAndTotals[2],forasAndTotals[1],forasAndTotals[3], forasAndTotals[2]+forasAndTotals[3]);
                 } else {
                     setScores = reverseSets(setScores);
                     //System.out.printf("%s | %s - %s | %s : %s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f\n", resultArray[0],resultArray[2],resultArray[1],result[1],result[0],forasAndTotals[1],forasAndTotals[3],forasAndTotals[0],forasAndTotals[2], forasAndTotals[2]+forasAndTotals[3]);
                     //не закочено!
-                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s\n", resultArray[0], resultArray[2], resultArray[1], result[1], result[0], forasAndTotals[1], forasAndTotals[3], forasAndTotals[0], forasAndTotals[2], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
+                    System.out.printf("%s %s| %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s\n", resultArray[0], matchDate,resultArray[2], resultArray[1], result[1], result[0], forasAndTotals[1], forasAndTotals[3], forasAndTotals[0], forasAndTotals[2], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
                 }
 
         }
-
-        System.out.println("matches - " + countMatches + " wins - " + countWin + "winrate - " + countWin / countMatches * 100);
+            System.out.printf("Matches: %.0f | Wins: %.0f | WinRate: %.0f percents\n",countMatches,countWin, countWin/countMatches * 100);
+        //System.out.println("matches - " + countMatches + " wins - " + countWin + "winrate - " + countWin / countMatches * 100);
     } catch(
     SQLException e)
 
@@ -270,6 +275,7 @@ public class ServerManager {
         String[] result;
         double winsOfPlayer1 = 0, winsOfPlayer2 = 0;
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
         double win142day = searchPlayersMatch(name1,df.format(new Date()));
         double win242day = searchPlayersMatch(name2,df.format(new Date()));
         System.out.printf("%s(today) winrates %s / %s : %.0f / %.0f\n",df.format(new Date()),name1,name2,win142day,win242day);
@@ -288,12 +294,15 @@ public class ServerManager {
                 String[] setScores = new String[7];
 
                 String[] resultArray = new String[11];
-
                 result = rs.getString(4).split(":");
 
                 for (int index = 0; index < 11; index++) {
                     resultArray[index] = rs.getString(index + 1);
                 }
+
+                String date = resultArray[0].substring(0,10);
+                String matchDate = getWeekDayFromDate(date);
+
                 setScores = Arrays.copyOfRange(resultArray, 4, 11);
                 double[] forasAndTotals = getForaAndTotals(setScores);
 
@@ -316,14 +325,15 @@ public class ServerManager {
                 if (rs.getString(2).equals(name1))
                 {
 
-                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | WinR1: %.0f : WinR2: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[1], resultArray[2], result[0], result[1], forasAndTotals[0], forasAndTotals[2], forasAndTotals[1], forasAndTotals[3], forasAndTotals[2] + forasAndTotals[3], win1, win2 , setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
+                    System.out.printf("%s %s| %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | WinR1: %.0f : WinR2: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], matchDate, resultArray[1], resultArray[2], result[0], result[1], forasAndTotals[0], forasAndTotals[2], forasAndTotals[1], forasAndTotals[3], forasAndTotals[2] + forasAndTotals[3], win1, win2 , setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
                 }
                 else {
                     setScores = reverseSets(setScores);
-                    System.out.printf("%s | %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | WinR1: %.0f : WinR2: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], resultArray[2], resultArray[1], result[1], result[0], forasAndTotals[1], forasAndTotals[3], forasAndTotals[0], forasAndTotals[2], forasAndTotals[2] + forasAndTotals[3],win2 ,win1, setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
+                    System.out.printf("%s %s| %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | WinR1: %.0f : WinR2: %.0f | %s %s %s %s %s %s %s \n", resultArray[0], matchDate, resultArray[2], resultArray[1], result[1], result[0], forasAndTotals[1], forasAndTotals[3], forasAndTotals[0], forasAndTotals[2], forasAndTotals[2] + forasAndTotals[3],win2 ,win1, setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
                 }
             }
-            System.out.println("wins of " + name1 + " - " + winsOfPlayer1 + " / wins of " + name2 + " - " + winsOfPlayer2);
+            System.out.printf("Wins %s / %s : %.0f / %.0f", name1, name2, winsOfPlayer1, winsOfPlayer2);
+            //System.out.println("wins of " + name1 + " - " + winsOfPlayer1 + " / wins of " + name2 + " - " + winsOfPlayer2);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -341,6 +351,17 @@ public class ServerManager {
             result[index] = splitedSet[1] + ":" + splitedSet[0];
         }
         return result;
+    }
+
+    public String getWeekDayFromDate(String date) {
+        Date dayWeek = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
+        try {
+            dayWeek = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new SimpleDateFormat("E").format(dayWeek);
     }
 
     public double[] getForaAndTotals(String[] setScores) {
@@ -397,7 +418,7 @@ public class ServerManager {
             //serverManager.insertResult(result);
             //serverManager.insertResult(result1);
             //serverManager.insertMatch(player1,player,result,date);
-            String p1 = "Алексей Попов";
+            String p1 = "Денис Медведев";
             String p2 = "Шамиль Хайруллин";
 
             serverManager.searchAllMatches();
