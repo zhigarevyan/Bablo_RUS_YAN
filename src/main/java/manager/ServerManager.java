@@ -272,6 +272,7 @@ public class ServerManager {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         double win142day = searchPlayersMatch(name1,df.format(new Date()));
         double win242day = searchPlayersMatch(name2,df.format(new Date()));
+        System.out.printf("%s(today) winrates %s / %s : %.0f / %.0f\n",df.format(new Date()),name1,name2,win142day,win242day);
         try {
             ps = connection.prepareStatement(SQL_SEARCH_2PLAYERS_MATCH);
             ps.setString(1, name1);
@@ -326,7 +327,6 @@ public class ServerManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.printf("%s(today) winrate of %s is %.0f  -  winrate today of %s is %.0f\n",df.format(new Date()),name1, win142day,name2,win242day);
     }
 
     public String[] reverseSets(String[] setScores) {
