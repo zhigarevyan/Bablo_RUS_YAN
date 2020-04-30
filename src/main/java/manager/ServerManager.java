@@ -270,10 +270,8 @@ public class ServerManager {
         String[] result;
         double winsOfPlayer1 = 0, winsOfPlayer2 = 0;
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        System.out.println(df.format(new Date()));
         double win142day = searchPlayersMatch(name1,df.format(new Date()));
         double win242day = searchPlayersMatch(name2,df.format(new Date()));
-        System.out.printf("winrate today of %s is %.0f  -  winrate today of %s is %.0f\n",name1, win142day,name2,win242day);
         try {
             ps = connection.prepareStatement(SQL_SEARCH_2PLAYERS_MATCH);
             ps.setString(1, name1);
@@ -299,16 +297,20 @@ public class ServerManager {
                 double[] forasAndTotals = getForaAndTotals(setScores);
 
                 if (Double.valueOf(result[0]) > Double.valueOf(result[1])) {
-                    if (rs.getString(2).equals(name1))
+                    if (rs.getString(2).equals(name1)) {
                         winsOfPlayer1++;
-                    else
+                    }
+                    else {
                         winsOfPlayer2++;
+                    }
                 }
                 if (Double.valueOf(result[0]) < Double.valueOf(result[1])) {
-                    if (rs.getString(2).equals(name1))
+                    if (rs.getString(2).equals(name1)) {
                         winsOfPlayer2++;
-                    else
+                    }
+                    else {
                         winsOfPlayer1++;
+                    }
                 }
                 if (rs.getString(2).equals(name1))
                 {
@@ -324,6 +326,7 @@ public class ServerManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.printf("%s(today) winrate of %s is %.0f  -  winrate today of %s is %.0f\n",df.format(new Date()),name1, win142day,name2,win242day);
     }
 
     public String[] reverseSets(String[] setScores) {
@@ -394,16 +397,18 @@ public class ServerManager {
             //serverManager.insertResult(result);
             //serverManager.insertResult(result1);
             //serverManager.insertMatch(player1,player,result,date);
-            String p1 = "Алишер Каримжанов";
-            String p2 = "Тимур Мамазакиров";
+            String p1 = "Алексей Попов";
+            String p2 = "Шамиль Хайруллин";
 
             serverManager.searchAllMatches();
-            System.out.println("\n");
-            System.out.printf("\n -------------%s statistics------------- \n", p1);
+            System.out.print("\n");
+            //System.out.printf("\n -------------%s statistics------------- \n", p1);
             serverManager.searchPlayersMatchWithForaAndTotals(p1);
-            System.out.printf("\n -------------%s statistics------------- \n", p2);
+            System.out.print("\n");
+            //System.out.printf("\n -------------%s statistics------------- \n", p2);
             serverManager.searchPlayersMatchWithForaAndTotals(p2);
-            System.out.printf("\n -------------%s - %s------------- \n", p1, p2);
+            System.out.print("\n");
+            //System.out.printf("\n -------------%s - %s------------- \n", p1, p2);
             serverManager.search2PlayersMatchWithForaAndTotals(p1, p2);
         } catch (SQLException e) {
             e.printStackTrace();
