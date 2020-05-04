@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
-public class ServerManager {
+public class DistancedServerManager {
 
     private static int limits = 10;
     private static String player1 = "";
@@ -40,17 +40,17 @@ public class ServerManager {
     private final static String SQL_INSERT_RESULT = "insert into sKtlTcXzr6.result (score, set1,set2,set3,set4,set5,set6,set7) values (?,?,?,?,?,?,?,?)";
     private final static String SQL_SELECT_PLAYER_NAME = "select name from sKtlTcXzr6.players where name = (?) ";
     private final static String SQL_SELECT_RESULT = "select * from sKtlTcXzr6.result where result.score = (?) and result.set1 = (?) and result.set2 = (?) and result.set3 = (?) and result.set4 = (?) and result.set5 = (?) and result.set6 = (?) and result.set7 = (?)";
-    private final static String SQL_SELECT_MATCH = "select * from sKtlTcXzr6.matches where matches.player1 = (?) and matches.player2 = (?) and result = (?) and matches.date = (?)";
+    private final static String SQL_SELECT_MATCH = "select * from bajblo.matches where matches.player1 = (?) and matches.player2 = (?) and result = (?) and matches.date = (?)";
     private final static String SQL_SELECT_RESULT_FOR_MATCH = "select idresult from sKtlTcXzr6.result where result.score = (?) and result.set1 = (?) and result.set2 = (?) and result.set3 = (?) and result.set4 = (?) and result.set5 = (?) and result.set6 = (?) and result.set7 = (?)";
     private final static String SQL_SELECT_PLAYER_FOR_MATCH = "select players.idplayers from sKtlTcXzr6.players where name = (?)";
     private final static String SQL_INSERT_MATCH = "insert into sKtlTcXzr6.matches(player1,player2,result,date) values (?,?,?,?)";
-    private final static String SQL_SEARCH_PLAYERS_MATCH = "select matches.date, p1.name, p2.name, r.score,r.set1,r.set2,r.set3,r.set4,r.set5,r.set6,r.set7 from matches, players p1, players p2, result r where matches.player1 = p1.idplayers and matches.player2 = p2.idplayers and matches.result=r.idresult and (p1.name=(?) or p2.name = (?)) order by matches.date desc limit 100";
+    private final static String SQL_SEARCH_PLAYERS_MATCH = "select matches.date, p1.name, p2.name, r.score,r.set1,r.set2,r.set3,r.set4,r.set5,r.set6,r.set7 from matches, players p1, players p2, result r where matches.player1 = p1.idplayers and matches.player2 = p2.idplayers and matches.result=r.idresult and (p1.name=(?) or p2.name = (?)) order by matches.date desc limit 10";
     private final static String SQL_SEARCH_2PLAYERS_MATCH = "select matches.date, p1.name, p2.name, r.score,r.set1,r.set2,r.set3,r.set4,r.set5,r.set6,r.set7 from matches, players p1, players p2, result r where matches.player1 = p1.idplayers and matches.player2 = p2.idplayers and matches.result=r.idresult and ((p1.name=(?) and p2.name = (?)) or (p1.name=(?) and p2.name = (?))) order by matches.date desc limit 10";
     private final static String SQL_SEARCH_ALL_MATCHES = "select matches.date, p1.name, p2.name, r.score,r.set1,r.set2,r.set3,r.set4,r.set5,r.set6,r.set7 from matches, players p1, players p2, result r where matches.player1 = p1.idplayers and matches.player2 = p2.idplayers and matches.result=r.idresult and matches.date > '2020-04-22' order by matches.date desc";
     private final static String SQL_SEARCH_PLAYERS_MATCH_FOR_DATE = "select matches.date, p1.name, p2.name, r.score,r.set1,r.set2,r.set3,r.set4,r.set5,r.set6,r.set7 from matches, players p1, players p2, result r where matches.player1 = p1.idplayers and matches.player2 = p2.idplayers and matches.result=r.idresult and (p1.name=(?) or p2.name = (?)) and matches.date like(?) order by matches.date desc";
 
 
-    public ServerManager() throws SQLException {
+    public DistancedServerManager() throws SQLException {
         this.connection = ConnectorDB.getConnection();
     }
 
@@ -76,6 +76,8 @@ public class ServerManager {
             e.printStackTrace();
         }
     }
+
+
 
     public void insertResult(Result result) {
         PreparedStatement ps = null;
@@ -148,7 +150,6 @@ public class ServerManager {
             psForCheck.setString(3, String.valueOf(rsForResult.getInt(1)));
             psForCheck.setString(4, date);
             ResultSet resultToCheck = psForCheck.executeQuery();
-            System.out.println("Проверим " + resultToCheck);
             if (resultToCheck.next()) {
                 return;
             } else {
@@ -157,12 +158,10 @@ public class ServerManager {
                 psForInsertMatch.setString(2, String.valueOf(rsForPlayer2.getInt(1)));
                 psForInsertMatch.setString(3, String.valueOf(rsForResult.getInt(1)));
                 psForInsertMatch.setString(4, date);
-                System.out.printf("Инсерт матча: %d %d %d %s\n",rsForPlayer1.getInt(1),rsForPlayer2.getInt(1),rsForResult.getInt(1),date);
                 psForInsertMatch.execute();
             }
 
         } catch (SQLException e) {
-            System.out.println("ЭКСЭПШОН" + e.toString());
         }
     }
 
@@ -190,7 +189,7 @@ public class ServerManager {
                 }
             }
 
-           // System.out.println("matches - " + countMatches + " wins - " + countWin + "winrate - " + countWin / countMatches * 100);
+            // System.out.println("matches - " + countMatches + " wins - " + countWin + "winrate - " + countWin / countMatches * 100);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -244,17 +243,17 @@ public class ServerManager {
                     System.out.printf("%s %s| %s - %s | %s:%s | Fora1: %.0f Total1: %.0f | Fora2: %.0f Total2: %.0f | Total: %.0f | %s %s %s %s %s %s %s\n", resultArray[0], matchDate,resultArray[2], resultArray[1], result[1], result[0], forasAndTotals[1], forasAndTotals[3], forasAndTotals[0], forasAndTotals[2], forasAndTotals[2] + forasAndTotals[3], setScores[0], setScores[1], setScores[2], setScores[3], setScores[4], setScores[5], setScores[6]);
                 }
 
-        }
+            }
             System.out.printf("Matches: %.0f | Wins: %.0f | WinRate: %.0f percents\n",countMatches,countWin, countWin/countMatches * 100);
-        //System.out.println("matches - " + countMatches + " wins - " + countWin + "winrate - " + countWin / countMatches * 100);
-    } catch(
-    SQLException e)
+            //System.out.println("matches - " + countMatches + " wins - " + countWin + "winrate - " + countWin / countMatches * 100);
+        } catch(
+                SQLException e)
 
-    {
-        e.printStackTrace();
+        {
+            e.printStackTrace();
+        }
+
     }
-
-}
 
     public void search2PlayersMatch(String name1, String name2) {
         PreparedStatement ps = null;
@@ -430,8 +429,8 @@ public class ServerManager {
         try {
             ServerManager serverManager = new ServerManager();
 
-            String p1 = "Денис Динисламов";
-            String p2 = "Дмитрий Лоскутов";
+            String p1 = "Андрей Дергунов";
+            String p2 = "Олег Косых";
 
             serverManager.searchAllMatches();
             System.out.print("\n");

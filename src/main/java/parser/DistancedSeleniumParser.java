@@ -26,7 +26,7 @@ import java.util.TreeMap;
 
 import static java.lang.Thread.sleep;
 
-public class SeleniumParser {
+public class DistancedSeleniumParser {
 
     static ArrayList<String> datas = new ArrayList<String>();
     static ArrayList<String> names = new ArrayList<String>();
@@ -89,32 +89,33 @@ public class SeleniumParser {
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
         searchBox.sendKeys("BoomCup");
 
-        while(true) {
-            try {
-                sleep(15000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//        while(true) {
+//            try {
+//                sleep(15000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 
-            List<WebElement> dates = driver.findElements(By.className("c-games__row_light"));
-            addToLists(dates);
-            insertIntoDB();
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b");
-            searchBox.sendKeys("Мастерс");
+        List<WebElement> dates = driver.findElements(By.className("c-games__row_light"));
+        addToLists(dates);
+        insertIntoDB();
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b");
+        searchBox.sendKeys("Мастерс");
 
         dates = driver.findElements(By.className("c-games__row_light"));
         datas = new ArrayList<String>();
         names = new ArrayList<String>();
         results = new ArrayList<String>();
         linesQuantity = 0;
-            addToLists(dates);
-            insertIntoDB();
-        }
+        addToLists(dates);
+        insertIntoDB();
+        //}
+        return 1;
     }
 
     @SneakyThrows
@@ -140,7 +141,7 @@ public class SeleniumParser {
     }
 
 
-//yan ne pitukh
+    //yan ne pitukh
     public static void getDataForMonth() {
 
         WebDriver driver = new ChromeDriver();
@@ -150,14 +151,14 @@ public class SeleniumParser {
         WebElement nastolkaButton = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
         nastolkaButton.click();
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
-        searchBox.sendKeys("BoomCup");
+        searchBox.sendKeys("Boom-Cup");
         wait1.until(ExpectedConditions.visibilityOfElementLocated(By.className("c-games__row_light")));
 
-//        try {
-//            //sleep(15000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         WebElement calendar = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[1]"));
         WebElement prevMonth = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/header/span[1]"));
         WebElement showResults = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[2]/div[2]/div/div/div[5]/div"));
@@ -203,7 +204,7 @@ public class SeleniumParser {
                 linesQuantity = 0;
             }
 
-           performClick(calendar, driver);
+            performClick(calendar, driver);
             performClick(prevMonth, driver);
             monthCounter--;
         }

@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="bablo@localhost" uuid="e6690b16-8885-4451-9415-c3e38779d0cc">
+    <data-source source="LOCAL" name="sKtlTcXzr6@remotemysql.com" uuid="e6690b16-8885-4451-9415-c3e38779d0cc">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/bablo</jdbc-url>
+      <jdbc-url>jdbc:mysql://remotemysql.com:3306/sKtlTcXzr6</jdbc-url>
     </data-source>
     <data-source source="LOCAL" name="@localhost" uuid="b5668224-76d2-4198-a189-05448a09543e">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="MySQL -" uuid="452f0fdf-b693-428c-bae2-a499be1e4e41">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://:3306</jdbc-url>
     </data-source>
   </component>
 </project>
