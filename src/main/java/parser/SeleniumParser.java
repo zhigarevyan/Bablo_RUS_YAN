@@ -33,6 +33,7 @@ public class SeleniumParser {
     static ArrayList<String> results = new ArrayList<String>();
     static int linesQuantity = 0;
     static ServerManager serverManager = null;
+    static String league;
 
     public static Player[] playersToDBForm(String players){
 
@@ -87,7 +88,6 @@ public class SeleniumParser {
         System.out.println(nastolkaButton.getText());
         //wait1.until(ExpectedConditions.elementToBeClickable(By.className("c-games__row")));
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
-        searchBox.sendKeys("BoomCup");
 
         while(true) {
             try {
@@ -96,16 +96,21 @@ public class SeleniumParser {
                 e.printStackTrace();
             }
 
+        league = "Mini Table Tennis";
+        searchBox.sendKeys(league);
+
             List<WebElement> dates = driver.findElements(By.className("c-games__row_light"));
             addToLists(dates);
-            insertIntoDB();
+            insertIntoDB_L();
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b");
-            searchBox.sendKeys("Мастерс");
+
+            searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+            league = "BoomCup";
+            searchBox.sendKeys(league);
 
         dates = driver.findElements(By.className("c-games__row_light"));
         datas = new ArrayList<String>();
@@ -113,7 +118,21 @@ public class SeleniumParser {
         results = new ArrayList<String>();
         linesQuantity = 0;
             addToLists(dates);
-            insertIntoDB();
+            insertIntoDB_L();
+
+            searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b");
+            league = "Мастерс";
+            searchBox.sendKeys(league);
+
+            dates = driver.findElements(By.className("c-games__row_light"));
+            datas = new ArrayList<String>();
+            names = new ArrayList<String>();
+            results = new ArrayList<String>();
+            linesQuantity = 0;
+            addToLists(dates);
+            insertIntoDB_L();
+
+            searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
         }
     }
 
@@ -129,6 +148,23 @@ public class SeleniumParser {
             twoPlayers = playersToDBForm(names.get(index));
             result = scoreToDBForm(results.get(index));
             serverManager.insertMatch(twoPlayers[0],twoPlayers[1],result,date);
+        }
+        System.out.println("Вставлено " + index + " строк.");
+    }
+
+    @SneakyThrows
+    public static void insertIntoDB_L() {
+        serverManager = new ServerManager();
+        String date;
+        Player[] twoPlayers;
+        Result result;
+        int index;
+        for (index = 0; index < linesQuantity; index++) {
+            date = datasToDB(datas.get(index));
+            twoPlayers = playersToDBForm(names.get(index));
+            result = scoreToDBForm(results.get(index));
+            result.getScore();
+            serverManager.insertMatchL(twoPlayers[0],twoPlayers[1],result,date,league);
         }
         System.out.println("Вставлено " + index + " строк.");
     }
@@ -150,7 +186,7 @@ public class SeleniumParser {
         WebElement nastolkaButton = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
         nastolkaButton.click();
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
-        searchBox.sendKeys("BoomCup");
+        searchBox.sendKeys("Мастерс");
         wait1.until(ExpectedConditions.visibilityOfElementLocated(By.className("c-games__row_light")));
 
 //        try {
@@ -158,6 +194,7 @@ public class SeleniumParser {
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
+
         WebElement calendar = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[1]"));
         WebElement prevMonth = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/header/span[1]"));
         WebElement showResults = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[2]/div[2]/div/div/div[5]/div"));
@@ -167,7 +204,7 @@ public class SeleniumParser {
         while(monthCounter >= 0) {
             List<WebElement> daysToGet = driver.findElements(By.xpath("//*[@id='router_app']/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/div/*[.!='' and not(starts-with(@class,'cell day-header')) and not(starts-with(@class,'cell day disabled'))]"));
             if(firstMonth) {
-                daysToGet.remove(daysToGet.size() - 1); //убрать нажатие на сегодняшний день
+                //daysToGet.remove(daysToGet.size() - 1); //убрать нажатие на сегодняшний день
                 firstMonth = false;
             }
             performClick(temp,driver);
@@ -251,7 +288,6 @@ public class SeleniumParser {
 
     public static void main(String[] args) {
         linesQuantity = getInfoFromWebsite(); //returns number of lines;
-        insertIntoDB();
         //getDataForMonth();
 
     }
