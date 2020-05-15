@@ -34,6 +34,15 @@ public class SeleniumParser {
     static int linesQuantity = 0;
     static ServerManager serverManager = null;
     static String league;
+    static ChromeOptions options = new ChromeOptions();
+    static WebDriver driver;
+    static String[] leagues = {
+            "Мастерс",
+            "Mini Table Tennis",
+            "BoomCup",
+            "Pro Spin Series",
+            "Лига Про"
+    };
 
     public static Player[] playersToDBForm(String players){
 
@@ -42,12 +51,13 @@ public class SeleniumParser {
         Player[] playersArr = {new Player(), new Player()};
 
         listOfPlayers = players.split(" - ");
-
         listOfPlayers[0].trim();
         listOfPlayers[1].trim();
         int deleteAfterIndex = listOfPlayers[0].lastIndexOf(" ");
+        if(deleteAfterIndex!=-1)
         listOfPlayers[0] = listOfPlayers[0].substring(0,deleteAfterIndex);
         deleteAfterIndex = listOfPlayers[1].lastIndexOf(" ");
+        if(deleteAfterIndex!=-1)
         listOfPlayers[1] = listOfPlayers[1].substring(0,deleteAfterIndex);
 
         System.out.println(listOfPlayers[0]+listOfPlayers[1]);
@@ -75,12 +85,13 @@ public class SeleniumParser {
         return results;
     }
 
-    public static int getInfoFromWebsite() {
+    public static void getInfoFromWebsite() {
 
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "./chromedriver");
 
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://1xbet.com/results/");
+
+        driver.get("https://1xstavka.ru/results/");
         WebDriverWait wait1 = new WebDriverWait(driver, 30);
         //WebElement nastolkaButton = wait1.until(ExpectedConditions.elementToBeClickable(By.xpath("*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
         WebElement nastolkaButton = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
@@ -89,16 +100,23 @@ public class SeleniumParser {
         //wait1.until(ExpectedConditions.elementToBeClickable(By.className("c-games__row")));
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
 
-        while(true) {
-            try {
-                sleep(15000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//        while(true) {
+//            try {
+//                sleep(15000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 
-        league = "Mini Table Tennis";
-        searchBox.sendKeys(league);
+     //   }
 
+        loadLeagues(searchBox);
+        driver.close();
+    }
+
+    public static void loadLeagues(WebElement searchBox) {
+        for(String leagueName : leagues) {
+            league = leagueName;
+            searchBox.sendKeys(leagueName);
             List<WebElement> dates = driver.findElements(By.className("c-games__row_light"));
             addToLists(dates);
             insertIntoDB_L();
@@ -108,31 +126,7 @@ public class SeleniumParser {
                 e.printStackTrace();
             }
 
-            searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
-            league = "BoomCup";
-            searchBox.sendKeys(league);
-
-        dates = driver.findElements(By.className("c-games__row_light"));
-        datas = new ArrayList<String>();
-        names = new ArrayList<String>();
-        results = new ArrayList<String>();
-        linesQuantity = 0;
-            addToLists(dates);
-            insertIntoDB_L();
-
-            searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b");
-            league = "Мастерс";
-            searchBox.sendKeys(league);
-
-            dates = driver.findElements(By.className("c-games__row_light"));
-            datas = new ArrayList<String>();
-            names = new ArrayList<String>();
-            results = new ArrayList<String>();
-            linesQuantity = 0;
-            addToLists(dates);
-            insertIntoDB_L();
-
-            searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+            searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
         }
     }
 
@@ -179,14 +173,12 @@ public class SeleniumParser {
 //yan ne pitukh
     public static void getDataForMonth() {
 
-        WebDriver driver = new ChromeDriver();
-
         driver.get("https://1xbet.com/results/");
         WebDriverWait wait1 = new WebDriverWait(driver, 30);
         WebElement nastolkaButton = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
         nastolkaButton.click();
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
-        searchBox.sendKeys("Мастерс");
+        searchBox.sendKeys(league);
         wait1.until(ExpectedConditions.visibilityOfElementLocated(By.className("c-games__row_light")));
 
 //        try {
@@ -201,10 +193,14 @@ public class SeleniumParser {
         WebElement temp = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[1]"));
         int monthCounter = 3;
         boolean firstMonth = true;
+        performClick(calendar, driver);
+        performClick(prevMonth, driver);
         while(monthCounter >= 0) {
             List<WebElement> daysToGet = driver.findElements(By.xpath("//*[@id='router_app']/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/div/*[.!='' and not(starts-with(@class,'cell day-header')) and not(starts-with(@class,'cell day disabled'))]"));
             if(firstMonth) {
-                //daysToGet.remove(daysToGet.size() - 1); //убрать нажатие на сегодняшний день
+                for(int i = 0; i < 2; i++) {
+                    daysToGet.remove(daysToGet.size() - 1); //убрать нажатие на сегодняшний день
+                }
                 firstMonth = false;
             }
             performClick(temp,driver);
@@ -231,9 +227,7 @@ public class SeleniumParser {
                 performClick(showResults, driver);
                 performClick(showResults, driver);
 
-                List<WebElement> matches = driver.findElements(By.className("c-games__row_light"));
-                addToLists(matches);
-                insertIntoDB();
+                loadLeagues(searchBox);
                 datas = new ArrayList<String>();
                 names = new ArrayList<String>();
                 results = new ArrayList<String>();
@@ -244,13 +238,6 @@ public class SeleniumParser {
             performClick(prevMonth, driver);
             monthCounter--;
         }
-
-        //List<WebElement> lines = driver.findElements(By.className("c-games__row_light"));
-        //addToLists(lines);
-
-        //WebElement selectedDay = driver.findElement(By.xpath("//span[starts-with(@class, \"cell day selected\")]"));
-        //daySelected = Integer.valueOf(selectedDay.getText());
-        //System.out.println(daySelected);
     }
 
     public static void addToLists(List<WebElement> list) {
@@ -265,6 +252,7 @@ public class SeleniumParser {
                 continue;
             }
             datas.add(input[0]);
+            System.out.println(input[0]);
             names.add(input[1]);
             results.add(input[2]);
             linesQuantity++;
@@ -286,8 +274,21 @@ public class SeleniumParser {
         action.perform();
     }
 
+    public static void init() {
+        //System.setProperty("webdriver.chrome.driver", "./chromedriver");
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        //options.addArguments("--headless");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--lang=ru");
+        driver =  new ChromeDriver(options);
+    }
+
     public static void main(String[] args) {
-        linesQuantity = getInfoFromWebsite(); //returns number of lines;
+        init();
+
+        league = "Pro Spin Series";
+        System.out.println("\n\n---БАЗАБАКА МАНАГЕР---\n\n");
+        getInfoFromWebsite();
         //getDataForMonth();
 
     }
