@@ -19,10 +19,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.lang.instrument.ClassDefinition;
+import java.lang.management.ManagementFactory;
 import java.sql.Date;
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.List;
-import java.util.TreeMap;
 
 import static java.lang.Thread.sleep;
 
@@ -32,17 +33,20 @@ public class SeleniumParser {
     static ArrayList<String> names = new ArrayList<String>();
     static ArrayList<String> results = new ArrayList<String>();
     static int linesQuantity = 0;
-    static ServerManager serverManager = null;
+    static ServerManager serverManager;
     static String league;
     static ChromeOptions options = new ChromeOptions();
     static WebDriver driver;
-    static String[] leagues = {
-            "Мастерс",
-            "Mini Table Tennis",
-            "BoomCup",
-            "Pro Spin Series",
-            "Лига Про"
-    };
+    static ArrayList<String> leagues;
+//    static String[] leagues = {
+////            "Мастерс",
+////            "Mini Table Tennis",
+////            "BoomCup",
+////            "Pro Spin Series",
+////            "Лига Про",
+////            "Челленджер серия",
+////            "Мини-теннис"
+//    }; // позднее заменить на лиги, полученные из базы
 
     public static Player[] playersToDBForm(String players){
 
@@ -85,16 +89,13 @@ public class SeleniumParser {
         return results;
     }
 
+
     public static void getInfoFromWebsite() {
 
-        //System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
-        System.setProperty("webdriver.chrome.driver", "./chromedriver");
-
-
-        driver.get("https://1xstavka.ru/results/");
         WebDriverWait wait1 = new WebDriverWait(driver, 30);
-        //WebElement nastolkaButton = wait1.until(ExpectedConditions.elementToBeClickable(By.xpath("*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
-        WebElement nastolkaButton = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
+        try {
+            WebElement nastolkaButton = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
+
         nastolkaButton.click();
         System.out.println(nastolkaButton.getText());
         //wait1.until(ExpectedConditions.elementToBeClickable(By.className("c-games__row")));
@@ -106,15 +107,23 @@ public class SeleniumParser {
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
-
      //   }
 
         loadLeagues(searchBox);
-        driver.close();
+        serverManager.setUpdateDate();
+        }
+        catch (TimeoutException e) {
+            System.out.println("САЙТ НЕ ЗАГРУЖЕН. Ожидание следующей итерации...");
+        }
     }
 
     public static void loadLeagues(WebElement searchBox) {
+        serverManager.prepareUpdateDates();
+        leagues = serverManager.getLeagues();
+
         for(String leagueName : leagues) {
+            if(!leagueName.equals("Чехия. ТТ Стар Серия")) continue;
+
             league = leagueName;
             searchBox.sendKeys(leagueName);
             List<WebElement> dates = driver.findElements(By.className("c-games__row_light"));
@@ -127,12 +136,15 @@ public class SeleniumParser {
             }
 
             searchBox.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+            datas = new ArrayList<String>();
+            names = new ArrayList<String>();
+            results = new ArrayList<String>();
+            linesQuantity = 0;
         }
     }
 
     @SneakyThrows
     public static void insertIntoDB() {
-        serverManager = new ServerManager();
         String date;
         Player[] twoPlayers;
         Result result;
@@ -148,17 +160,21 @@ public class SeleniumParser {
 
     @SneakyThrows
     public static void insertIntoDB_L() {
-        serverManager = new ServerManager();
         String date;
         Player[] twoPlayers;
         Result result;
         int index;
         for (index = 0; index < linesQuantity; index++) {
-            date = datasToDB(datas.get(index));
-            twoPlayers = playersToDBForm(names.get(index));
-            result = scoreToDBForm(results.get(index));
-            result.getScore();
-            serverManager.insertMatchL(twoPlayers[0],twoPlayers[1],result,date,league);
+            try {
+                date = datasToDB(datas.get(index));
+                twoPlayers = playersToDBForm(names.get(index));
+                result = scoreToDBForm(results.get(index));
+                result.getScore();
+                serverManager.insertMatchL(twoPlayers[0], twoPlayers[1], result, date, league);
+            }
+            catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Ошибочная линия, двигаемся дальше...");
+            }
         }
         System.out.println("Вставлено " + index + " строк.");
     }
@@ -178,8 +194,8 @@ public class SeleniumParser {
         WebElement nastolkaButton = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"router_app\"]/div/div[2]/div/div/div[1]/div/section/ul/li[7]/a")));
         nastolkaButton.click();
         WebElement searchBox = driver.findElement(By.xpath("//*[@id=\"searchGames\"]"));
-        searchBox.sendKeys(league);
-        wait1.until(ExpectedConditions.visibilityOfElementLocated(By.className("c-games__row_light")));
+        //searchBox.sendKeys(league);
+        //wait1.until(ExpectedConditions.visibilityOfElementLocated(By.className("c-games__row_light")));
 
 //        try {
 //            //sleep(15000);
@@ -193,12 +209,12 @@ public class SeleniumParser {
         WebElement temp = driver.findElement(By.xpath("//*[@id=\"router_app\"]/div/div[1]"));
         int monthCounter = 3;
         boolean firstMonth = true;
-        performClick(calendar, driver);
-        performClick(prevMonth, driver);
+//        performClick(calendar, driver);
+//        performClick(prevMonth, driver);
         while(monthCounter >= 0) {
             List<WebElement> daysToGet = driver.findElements(By.xpath("//*[@id='router_app']/div/div[2]/div/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/div/*[.!='' and not(starts-with(@class,'cell day-header')) and not(starts-with(@class,'cell day disabled'))]"));
             if(firstMonth) {
-                for(int i = 0; i < 2; i++) {
+                for(int i = 0; i < 1; i++) {
                     daysToGet.remove(daysToGet.size() - 1); //убрать нажатие на сегодняшний день
                 }
                 firstMonth = false;
@@ -228,10 +244,7 @@ public class SeleniumParser {
                 performClick(showResults, driver);
 
                 loadLeagues(searchBox);
-                datas = new ArrayList<String>();
-                names = new ArrayList<String>();
-                results = new ArrayList<String>();
-                linesQuantity = 0;
+
             }
 
            performClick(calendar, driver);
@@ -258,7 +271,6 @@ public class SeleniumParser {
             linesQuantity++;
 
         }
-
     }
 
     public static void performClick(WebElement element, WebDriver driver) {
@@ -275,21 +287,62 @@ public class SeleniumParser {
     }
 
     public static void init() {
+        System.out.println("Get id...\n\n");
+        System.out.println(ManagementFactory.getRuntimeMXBean().getName());
         //System.setProperty("webdriver.chrome.driver", "./chromedriver");
         System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        //System.setProperty("file.encoding", "UTF-8");
         //options.addArguments("--headless");
         options.addArguments("--no-sandbox");
         options.addArguments("--lang=ru");
+
+        try {
+            serverManager = new ServerManager();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         driver =  new ChromeDriver(options);
+        driver.get("https://1xstavka.ru/results/");
+
+        Timer timer = new Timer();
+        MyTask task = new MyTask();
+        //timer.schedule(task, 0,20*60*1000);
     }
 
     public static void main(String[] args) {
+        System.out.println("\n\n---V1.01 AutoUpdating---\n\n");
         init();
 
-        league = "Pro Spin Series";
-        System.out.println("\n\n---БАЗАБАКА МАНАГЕР---\n\n");
-        getInfoFromWebsite();
-        //getDataForMonth();
+        //getInfoFromWebsite();
+        getDataForMonth();
+        //driver.quit();
+//        System.exit(1);
+    }
+
+    public static class MyTask extends TimerTask {
+
+        @Override
+        public void run() {
+            System.out.println("Запуск...");
+            try {
+                serverManager = new ServerManager();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                driver = new ChromeDriver(options);
+
+            driver.get("https://1xstavka.ru/results/");
+
+            getInfoFromWebsite();
+            //getDataForMonth();
+            driver.quit();
+            } catch (RuntimeException e) {
+                System.out.println("Хром не был запущен. Ожидание следующей итерации..");
+            }
+            System.gc();
+        }
 
     }
 

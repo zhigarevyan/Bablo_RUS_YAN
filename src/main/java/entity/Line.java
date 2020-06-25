@@ -136,4 +136,17 @@ public class Line {
     public void setWinR2(String winR2) {
         this.winR2 = winR2;
     }
+
+
+
+    public int getWinner() {
+        String[] scoreArray = this.score.split(":");
+        int score1 = Integer.parseInt(scoreArray[0]);
+        int score2 = Integer.parseInt(scoreArray[1]);
+        if(score1 > score2) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
 }
